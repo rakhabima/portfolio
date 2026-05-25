@@ -13,8 +13,15 @@ const CANVAS_FADE_END = 0.80;
 const COURT_FADE_START = 0.75;
 const COURT_FADE_END = 1.0;
 
+// Lerp factor per frame — higher = snappier, lower = smoother
+const LERP_FACTOR = 0.10;
+
 function clamp(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v));
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
 }
 
 /* ─── shared court content ─── */
@@ -163,7 +170,13 @@ function DesktopScrollSequence() {
   const courtLayerRef = useRef<HTMLDivElement>(null);
   const currentFrameRef = useRef(0);
   const rafRef = useRef(0);
+  const lerpRafRef = useRef(0);
   const pinRef = useRef<PinState>("before");
+
+  // Raw scroll progress (0→1) set by scroll handler
+  const targetProgressRef = useRef(0);
+  // Smoothed progress used for rendering
+  const smoothProgressRef = useRef(0);
 
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [firstLoaded, setFirstLoaded] = useState(false);
@@ -197,8 +210,15 @@ function DesktopScrollSequence() {
 
       if (!img?.complete || img.naturalWidth === 0) return;
 
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      // Only resize canvas when viewport dimensions actually change
+      const needsResize =
+        canvas.width !== window.innerWidth ||
+        canvas.height !== window.innerHeight;
+
+      if (needsResize) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
 
       const canvasRatio = canvas.width / canvas.height;
       const imgRatio = img.width / img.height;
@@ -229,8 +249,10 @@ function DesktopScrollSequence() {
         )
       );
 
-      currentFrameRef.current = frameIndex;
-      drawFrame(imgs, frameIndex);
+      if (frameIndex !== currentFrameRef.current) {
+        currentFrameRef.current = frameIndex;
+        drawFrame(imgs, frameIndex);
+      }
     },
     [drawFrame]
   );
@@ -287,15 +309,17 @@ function DesktopScrollSequence() {
     const courtLayer = courtLayerRef.current;
 
     if (canvasLayer) {
-      canvasLayer.style.opacity = String(canvasOp);
+      canvasLayer.style.opacity = String(canvasOp.toFixed(4));
       canvasLayer.style.visibility = canvasOp > 0.001 ? "visible" : "hidden";
     }
 
     if (courtLayer) {
-      courtLayer.style.opacity = String(courtOp);
+      courtLayer.style.opacity = String(courtOp.toFixed(4));
       courtLayer.style.visibility = courtOp > 0.001 ? "visible" : "hidden";
       courtLayer.style.pointerEvents = courtOp > 0.95 ? "auto" : "none";
-      courtLayer.style.transform = `translate3d(0, ${36 - courtOp * 36}px, 0)`;
+      // Smooth eased translate: starts 36px down, eases to 0
+      const translateY = (1 - courtOp) * 36;
+      courtLayer.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0)`;
     }
   }, []);
 
@@ -346,7 +370,7 @@ function DesktopScrollSequence() {
     const wrapper = wrapperRef.current;
     if (!wrapper || images.length === 0) return;
 
-    const compute = () => {
+    const computeTarget = () => {
       const rect = wrapper.getBoundingClientRect();
       const vh = window.innerHeight;
       const scrollDistance = wrapper.offsetHeight - vh;
@@ -357,48 +381,59 @@ function DesktopScrollSequence() {
       let nextProgress: number;
 
       if (rect.top >= 0) {
-        // Wrapper top hasn't reached viewport top → stage in normal flow
         nextPin = "before";
         nextProgress = 0;
       } else if (rect.bottom <= vh) {
-        // Wrapper bottom has passed viewport bottom → stage at wrapper bottom
         nextPin = "after";
         nextProgress = 1;
       } else {
-        // In the pinning zone — stage fixed to viewport
         nextPin = "pinned";
         nextProgress = clamp(-rect.top / scrollDistance, 0, 1);
       }
 
-      // Apply pin state change
       if (nextPin !== pinRef.current) {
         pinRef.current = nextPin;
         applyPinState(nextPin);
       }
 
-      // Update visuals (opacity, transforms) directly on DOM
-      updateVisuals(nextProgress);
+      targetProgressRef.current = nextProgress;
+    };
 
-      // Draw canvas frame
-      drawFrameForProgress(
-        images,
-        clamp(nextProgress / CANVAS_END, 0, 1)
-      );
+    // Lerp render loop — runs every frame while pinned
+    const renderLoop = () => {
+      lerpRafRef.current = requestAnimationFrame(renderLoop);
+
+      const target = targetProgressRef.current;
+      const current = smoothProgressRef.current;
+      const delta = target - current;
+
+      // Skip tiny updates to avoid unnecessary DOM writes
+      if (Math.abs(delta) < 0.0001) return;
+
+      const next = lerp(current, target, LERP_FACTOR);
+      smoothProgressRef.current = next;
+
+      updateVisuals(next);
+      drawFrameForProgress(images, clamp(next / CANVAS_END, 0, 1));
     };
 
     const onScroll = () => {
       cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(compute);
+      rafRef.current = requestAnimationFrame(computeTarget);
     };
 
     // Initial computation
-    compute();
+    computeTarget();
+
+    // Start lerp loop
+    lerpRafRef.current = requestAnimationFrame(renderLoop);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(lerpRafRef.current);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
@@ -426,8 +461,17 @@ function DesktopScrollSequence() {
         <div
           ref={canvasLayerRef}
           className="absolute inset-0"
-          style={{ opacity: 1, visibility: "visible" }}
+          style={{ opacity: 1, visibility: "visible", willChange: "opacity" }}
         >
+          {/* Static first frame — visible instantly before JS loads images */}
+          {!firstLoaded && (
+            <img
+              src="/assets/animasi-tennis/ezgif-frame-001.png"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+            />
+          )}
           <canvas
             ref={canvasRef}
             className="block h-full w-full object-cover"
@@ -445,6 +489,7 @@ function DesktopScrollSequence() {
             pointerEvents: "none",
             background: "#0d0d0d",
             transform: "translate3d(0, 36px, 0)",
+            willChange: "opacity, transform",
           }}
         >
           <div className="section-pad h-full">

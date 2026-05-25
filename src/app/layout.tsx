@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ScrollProgress from "@/components/ScrollProgress";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
   title: "Rakha Bima | AI Software Engineer",
@@ -23,7 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <SmoothScroll />
+        {children}
+        <ScrollProgress />
+      </body>
     </html>
   );
 }

@@ -27,7 +27,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
   max-width: 100vw;
   scrollbar-gutter: stable;
@@ -66,7 +65,7 @@ body::before {
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(28px);
   }
 
   to {
@@ -1345,7 +1344,8 @@ main > section {
   .service-grid .info-card,
   .stats-grid div {
     animation: fade-up both;
-    animation-range: entry 8% cover 32%;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-range: entry 5% cover 35%;
     animation-timeline: view();
   }
 }
@@ -1914,4 +1914,33 @@ main > section {
   .project-line {
     font-size: 0.78rem;
   }
+}
+
+/* ─── Hide native scrollbar ─── */
+html {
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+/* ─── Custom progress scrollbar ─── */
+.scroll-progress-track {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100vh;
+  background: rgba(244, 241, 234, 0.08);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.scroll-progress-thumb {
+  width: 100%;
+  background: linear-gradient(to bottom, #00f5ff, #ff4fea);
+  border-radius: 2px;
+  transition: height 60ms linear;
+  will-change: height;
 }
