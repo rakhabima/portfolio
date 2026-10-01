@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { scrollToId } from "./SmoothScroll";
 
 const navItems = [
   { label: "Home", href: "/#top" },
@@ -18,16 +19,8 @@ export default function Header() {
     if (href.startsWith("/#")) {
       e.preventDefault();
       const id = href.replace("/#", "");
-      if (id === "top") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        window.history.pushState(null, "", "/");
-      } else {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-          window.history.pushState(null, "", `#${id}`);
-        }
-      }
+      scrollToId(id);
+      window.history.pushState(null, "", id === "top" ? "/" : `#${id}`);
     }
   };
 
