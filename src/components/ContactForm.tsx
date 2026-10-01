@@ -5,7 +5,7 @@ import { Terminal } from "lucide-react";
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success" | "error" | "limited">("idle");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,6 +17,7 @@ export default function ContactForm() {
       name: formData.get("name"),
       email: formData.get("email"),
       brief: formData.get("brief"),
+      website: formData.get("website"),
     };
 
     try {
@@ -30,7 +31,7 @@ export default function ContactForm() {
         setStatus("success");
         (e.target as HTMLFormElement).reset();
       } else {
-        setStatus("error");
+        setStatus(response.status === 429 ? "limited" : "error");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -51,6 +52,15 @@ export default function ContactForm() {
 
   return (
     <form className="contact-form" onSubmit={handleSubmit}>
+      {/* Honeypot: off-screen for humans, bots fill it and get silently dropped */}
+      <input
+        name="website"
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+      />
       <label>
         USER_NAME
         <input name="name" placeholder="your_name" type="text" required disabled={isSubmitting} />
@@ -76,6 +86,11 @@ export default function ContactForm() {
       {status === "error" && (
         <p className="md:col-span-2 text-[#ff4fea] font-bold uppercase mt-2">
           &gt; Error: Transmission failed. Please try again.
+        </p>
+      )}
+      {status === "limited" && (
+        <p className="md:col-span-2 text-[#ff4fea] font-bold uppercase mt-2">
+          &gt; Error: Too many messages. Please try again in a few minutes.
         </p>
       )}
     </form>
