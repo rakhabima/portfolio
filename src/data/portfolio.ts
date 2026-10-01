@@ -93,8 +93,10 @@ export const projects = [
     line: "Making personal spending visible, and a little harder to ignore.",
     cta: "VIEW_CASE_STUDY",
     visual: "finance",
-    // TODO: add screenshots under public/assets/project/boros-lu-miskin/
-    images: [] as string[],
+    images: [
+      "/assets/project/boros-lu-miskin/boros-lu-miskin-1.png",
+      "/assets/project/boros-lu-miskin/boros-lu-miskin-2.png"
+    ],
     details: [
       "Designed a database schema for expense tracking with category-based grouping",
       "Built a RESTful API with Express.js for expense CRUD and AI-powered spending insights",
@@ -103,7 +105,10 @@ export const projects = [
       "Built a responsive frontend with React and Tailwind CSS",
       "Containerized the full stack using Docker Compose"
     ],
-    links: [{ label: "SOURCE_CODE", href: "https://github.com/rakhabima/Boros-Lu-Miskin" }],
+    links: [
+      { label: "SOURCE_CODE", href: "https://github.com/rakhabima/Boros-Lu-Miskin" },
+      { label: "LIVE_DEMO", href: "https://boros-lu-miskin.vercel.app/" }
+    ],
     slug: "boros-lu-miskin"
   },
   {
@@ -111,7 +116,7 @@ export const projects = [
     title: "BAS-HIRING",
     type: "RECRUITMENT MANAGEMENT SYSTEM",
     description:
-      "An outsourcing recruitment platform built on the MERN stack, connecting candidates, recruiters, coordinators (Korlap), and General Managers in one hiring workflow, from job posting to technical tests, interviews, and employee data.",
+      "An outsourcing recruitment platform built on the MERN stack, connecting candidates, recruiters, coordinators (Korlap), and General Managers in one hiring workflow, from job posting and application to technical tests, interviews, and employee data management.",
     role: "Full-Stack Developer",
     stack: "MongoDB · Express.js · React · Node.js · Railway",
     focus: ["Candidate pipeline", "Role-based access", "Outsourcing requests"],
