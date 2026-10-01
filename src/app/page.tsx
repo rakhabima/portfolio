@@ -2,12 +2,12 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import type { SVGProps } from "react";
-import { projects } from "@/data/portfolio";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 import ContactForm from "@/components/ContactForm";
 import TechMarquee from "@/components/TechMarquee";
+import ProjectGrid from "@/components/ProjectGrid";
 import FadeUp from "@/components/animations/FadeUp";
 import ScrollSequence from "@/components/animations/ScrollSequence";
 import Experience from "@/components/Experience";
@@ -83,6 +83,7 @@ export default function Home() {
               src="/assets/hero/hero_dark.jpg"
               alt="Rakha Bima"
               fill
+              sizes="(min-width: 1280px) 420px, (min-width: 1024px) 380px, 300px"
               className="object-cover object-top"
               priority
             />
@@ -100,32 +101,7 @@ export default function Home() {
           <SectionTitle eyebrow="ENGINEERED & DEPLOYED WORKS" />
         </FadeUp>
 
-        <div className="project-grid">
-          {projects.map((project, index) => (
-            <FadeUp delay={index * 0.15} key={project.title}>
-              <article className="project-card">
-                <h3>{project.title}</h3>
-                <p className="project-type">{project.type}</p>
-                <p>{project.description}</p>
-                <div className="project-specs">
-                  <div>
-                    <span>Role</span>
-                    <p>{project.role}</p>
-                  </div>
-                  <div>
-                    <span>Stack / Focus</span>
-                    <p>{project.stack}</p>
-                  </div>
-                  <div>
-                    <span>Built For</span>
-                    <p>{project.focus.join(" · ")}</p>
-                  </div>
-                </div>
-                <p className="project-line">{project.line}</p>
-              </article>
-            </FadeUp>
-          ))}
-        </div>
+        <ProjectGrid />
 
         <FadeUp delay={0.2} id="stack">
           <TechMarquee />

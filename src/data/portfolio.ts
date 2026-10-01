@@ -1,50 +1,55 @@
-export const stackGroups = [
+export const professionalExperience = [
   {
-    title: "FRONTEND",
-    items: ["React", "Next.js", "TypeScript", "JavaScript"]
+    role: "Data Engineer Intern",
+    company: "Central Bank of Indonesia (DIDD)",
+    period: "JUL 2025 - SEP 2025",
+    location: "JAKARTA, ID",
+    bullets: [
+      "Engineered a web-based internal interface to replace manual database queries for data vault configuration, reducing operator friction.",
+      "Developed a centralized dashboard to provide real-time visibility into complex data tables and configuration records across teams.",
+      "Implemented structured input forms with custom validation logic to improve configuration accuracy and eliminate data entry errors."
+    ],
+    theme: {
+      text: "text-[#FF6B00]",
+      borderHover: "hover:border-[#FF6B00]",
+      shadow: "shadow-[6px_6px_0_#FF6B00]",
+      shadowHover: "hover:shadow-[3px_3px_0_#FF6B00]"
+    }
   },
   {
-    title: "BACKEND",
-    items: ["Node.js", "NestJS", "Python", "Java", "C#"]
-  },
-  {
-    title: "DATABASE",
-    items: ["PostgreSQL", "MongoDB", "Prisma"]
-  },
-  {
-    title: "DATA & BI",
-    items: ["Tableau", "Power BI"]
-  },
-  {
-    title: "TOOLS",
-    items: ["Docker", "Git", "Cloudinary", "WordPress"]
+    role: "Freelance Web Developer",
+    company: "Independent Projects",
+    period: "JAN 2023 - PRESENT",
+    bullets: [
+      "Delivered production-ready web applications for SMEs, spanning operational tools, e-commerce stores, and donation platforms.",
+      "Built and deployed an inventory and sales recording system currently utilized in active business operations.",
+      "Developed responsive, SEO-optimized applications using Next.js and the MERN stack to meet diverse client requirements."
+    ],
+    theme: {
+      text: "text-[#00FF6B]",
+      borderHover: "hover:border-[#00FF6B]",
+      shadow: "shadow-[6px_6px_0_#00FF6B]",
+      shadowHover: "hover:shadow-[3px_3px_0_#00FF6B]"
+    }
   }
 ];
 
-export const experiences = [
+export const otherExperiences = [
   {
-    role: "DATA_ENGINEER_INTERN",
-    company: "Central Bank of Indonesia - Department of Innovation and Data Digitalization",
-    period: "July 2025 - September 2025",
-    description:
-      "I built internal web-based tools to help teams interact with data vault configurations more efficiently. The system replaced manual database query workflows with a structured interface, making configuration processes clearer, safer, and easier to operate.",
-    contributions: [
-      "Built an internal interface for data configuration workflows.",
-      "Developed a centralized dashboard for real-time visibility across data tables and records.",
-      "Implemented structured input forms with validation logic to improve accuracy and reduce manual errors."
-    ]
-  },
-  {
-    role: "FREELANCE_SOFTWARE_ENGINEER",
-    company: "Independent Client Projects",
-    period: "January 2023 - Present",
-    description:
-      "I engineer production-ready web applications and internal tools for SMEs and organizations. My focus is on architecting scalable backend systems, designing structured databases, and delivering high-performance frontend interfaces.",
-    contributions: [
-      "Engineered responsive and scalable web applications using the MERN stack and Next.js.",
-      "Architected database schemas and implemented secure REST API integrations.",
-      "Developed custom software solutions to automate and digitize manual business operations."
-    ]
+    role: "Information Systems Student",
+    company: "Universitas Indonesia (Fasilkom)",
+    period: "2022 - 2026 (EXPECTED)",
+    bullets: [
+      "Maintaining a 3.14 GPA while specializing in full-stack web development and data engineering.",
+      "Currently developing a thesis focused on user intention factors within job portal platforms in Indonesia.",
+      "Relevant Coursework: Web Development, Database Systems, Systems Analysis & Design, and Data Structures & Algorithms."
+    ],
+    theme: {
+      text: "text-[#6B00FF]",
+      borderHover: "hover:border-[#6B00FF]",
+      shadow: "shadow-[6px_6px_0_#6B00FF]",
+      shadowHover: "hover:shadow-[3px_3px_0_#6B00FF]"
+    }
   }
 ];
 
@@ -54,97 +59,74 @@ export const projects = [
     title: "CATET-STOK",
     type: "SMART INVENTORY MANAGER",
     description:
-      "A full-featured operational system designed to eliminate manual stock tracking and transaction errors for growing businesses.",
+      "An operational management system (MVP) for small-to-medium businesses (UMKM), with a NestJS REST API backend, a mobile-first Next.js frontend, and PostgreSQL managed through Prisma ORM.",
     role: "Full-Stack Developer · Product Architect",
-    stack: "Next.js · NestJS · PostgreSQL · Docker",
+    stack: "Next.js · NestJS · PostgreSQL · Prisma · Docker",
     focus: ["Critical stock alerts", "Sales reporting", "Role-based access control"],
     line: "Turning daily business operations into a cleaner, faster, and more controlled workflow.",
     cta: "VIEW_CASE_STUDY",
     visual: "inventory",
+    images: [
+      "/assets/project/catet-stok/catet-stok-1.png",
+      "/assets/project/catet-stok/catet-stok-2.png",
+      "/assets/project/catet-stok/catet-stok-3.png"
+    ],
+    details: [
+      "Designed a multi-tenant database schema covering products, transactions, stock movements, and user roles",
+      "Built 20+ REST API endpoints for auth, inventory, transactions, and reporting using NestJS + Prisma",
+      "Implemented a stock movement audit trail with automatic adjustment on every transaction",
+      "Developed a mobile-first frontend UI with Next.js covering dashboard, products, and transactions",
+      "Configured deployment with Docker"
+    ],
+    links: [{ label: "SOURCE_CODE", href: "https://github.com/rakhabima/catet-stok" }],
     slug: "catet-stok"
   },
   {
     number: "PROJECT 002",
-    title: "OPENCLAW",
-    type: "PERSONAL AI ORCHESTRATION",
+    title: "BOROS LU MISKIN",
+    type: "AI-POWERED EXPENSE TRACKER",
     description:
-      "A personal automation lab for building agentic workflows. It uses specialized AI agents for research and content operations, orchestrated through role-based routing and task delegation.",
-    role: "AI Workflow Designer",
-    stack: "OpenClaw · n8n · OpenAI API",
-    focus: ["Automated tasks", "Multi-Agent Task Delegation"],
-    line: "A personal automation lab for building smarter, autonomous workflows.",
-    cta: "EXPLORE_WORKFLOW",
-    visual: "automation",
-    slug: "openclaw"
+      "A full-stack web app for recording and analyzing personal expenses, built with React + TypeScript, Express.js + Node.js, and PostgreSQL, with Google OAuth authentication and Telegram Bot integration.",
+    role: "Full-Stack Developer",
+    stack: "React · TypeScript · Express.js · PostgreSQL · Redis · Docker",
+    focus: ["AI spending insights", "Telegram Bot input", "Category-based reports"],
+    line: "Making personal spending visible, and a little harder to ignore.",
+    cta: "VIEW_CASE_STUDY",
+    visual: "finance",
+    // TODO: add screenshots under public/assets/project/boros-lu-miskin/
+    images: [] as string[],
+    details: [
+      "Designed a database schema for expense tracking with category-based grouping",
+      "Built a RESTful API with Express.js for expense CRUD and AI-powered spending insights",
+      "Implemented Google OAuth 2.0 authentication with Redis-backed session management",
+      "Integrated a Telegram Bot for adding expenses via chat with inline keyboard menus",
+      "Built a responsive frontend with React and Tailwind CSS",
+      "Containerized the full stack using Docker Compose"
+    ],
+    links: [{ label: "SOURCE_CODE", href: "https://github.com/rakhabima/Boros-Lu-Miskin" }],
+    slug: "boros-lu-miskin"
   },
   {
     number: "PROJECT 003",
-    title: "DATA VAULT CONFIG",
-    type: "ENTERPRISE DATA INTERFACE",
+    title: "BAS-HIRING",
+    type: "RECRUITMENT MANAGEMENT SYSTEM",
     description:
-      "configuration dashboard for the Department of Innovation and Data Digitalization at the Central Bank of Indonesia to replace manual database queries",
-    role: "Data Engineer Intern",
-    stack: "OracleDB · .NET · Data Vault",
-    focus: [
-      "Real-time visibility across team records",
-      "Replacing manual SQL query workflows"
+      "An outsourcing recruitment platform built on the MERN stack, connecting candidates, recruiters, coordinators (Korlap), and General Managers in one hiring workflow, from job posting to technical tests, interviews, and employee data.",
+    role: "Full-Stack Developer",
+    stack: "MongoDB · Express.js · React · Node.js · Railway",
+    focus: ["Candidate pipeline", "Role-based access", "Outsourcing requests"],
+    line: "One hiring workflow for every role, from application to employee record.",
+    cta: "VIEW_CASE_STUDY",
+    visual: "hiring",
+    // TODO: add screenshots under public/assets/project/bas-hiring/
+    images: [] as string[],
+    details: [
+      "Designed MongoDB data models for users, job postings, applications, interviews, and notifications",
+      "Built RESTful APIs for authentication, the candidate pipeline, and outsourcing request management",
+      "Implemented role-based access for Admin, Recruiter, Korlap, General Manager, and Candidate",
+      "Integrated the frontend with the backend across the full recruitment workflow and deployed on Railway"
     ],
-    line: "Turning manual data entry risks into a streamlined, real-time configuration dashboard.",
-    cta: "EXPLORE_SYSTEM",
-    visual: "data",
-    slug: ""
+    links: [{ label: "LIVE_DEMO", href: "https://bas-hiring.vercel.app/" }],
+    slug: "bas-hiring"
   }
-];
-
-export const processSteps = [
-  {
-    title: "MAP_THE_PROBLEM",
-    text: "I start by understanding the real workflow, user needs, business goals, and technical constraints behind the project."
-  },
-  {
-    title: "DESIGN_THE_SYSTEM",
-    text: "I translate requirements into user flows, data structures, feature logic, and product architecture."
-  },
-  {
-    title: "BUILD_THE_PRODUCT",
-    text: "I develop the frontend, backend, database, and integrations needed to make the product work end-to-end."
-  },
-  {
-    title: "TEST_AND_SHIP",
-    text: "I test the system, deploy it, gather feedback, and improve the product based on real usage."
-  },
-  {
-    title: "ITERATE_WITH_PURPOSE",
-    text: "A product is never just finished. It evolves with users, data, and changing business needs."
-  }
-];
-
-export const services = [
-  {
-    title: "FULL-STACK_ENGINEERING",
-    text: "End-to-end development of custom web applications with modern frontend frameworks, secure backend architectures, and scalable relational databases."
-  },
-  {
-    title: "DATA_SYSTEMS_&_PIPELINES",
-    text: "Designing and implementing internal data interfaces, automated ETL pipelines, and structured dashboards for data-driven operations."
-  },
-  {
-    title: "ENTERPRISE_SYSTEMS",
-    text: "Architecting custom software solutions like inventory management, POS integrations, and role-based operational systems for SMEs."
-  },
-  {
-    title: "AI_AUTOMATION_&_SCRIPTS",
-    text: "Developing AI-assisted workflows, automated cron jobs, Telegram bot integrations, and specialized task-runner scripts."
-  },
-  {
-    title: "CLOUD_DEPLOYMENT",
-    text: "Configuring production environments, CI/CD pipelines, Docker containerization, and optimizing server performance."
-  }
-];
-
-export const stats = [
-  ["3+ YEARS", "Building websites, tools, and digital systems."],
-  ["23K+ FOLLOWERS", "Built and scaled a digital content platform."],
-  ["1M+ LIKES", "Generated through consistent content strategy."],
-  ["END_TO_END", "From requirements to deployment."]
 ];
