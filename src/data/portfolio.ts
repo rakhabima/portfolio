@@ -123,8 +123,7 @@ export const projects = [
     line: "One hiring workflow for every role, from application to employee record.",
     cta: "VIEW_CASE_STUDY",
     visual: "hiring",
-    // TODO: add screenshots under public/assets/project/bas-hiring/
-    images: [] as string[],
+    images: [1, 2, 3, 4, 5].map((n) => `/assets/project/bas-hiring/bas-hiring-${n}.png`),
     details: [
       "Designed MongoDB data models for users, job postings, applications, interviews, and notifications",
       "Built RESTful APIs for authentication, the candidate pipeline, and outsourcing request management",
