@@ -1,29 +1,36 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Lenis from "lenis";
 
-export default function SmoothScroll() {
-  const lenisRef = useRef<Lenis | null>(null);
+let lenis: Lenis | null = null;
 
+// Scroll through Lenis once it is mounted, otherwise jump natively.
+export function scrollToId(id: string) {
+  const target = id === "top" ? 0 : document.getElementById(id);
+  if (target === null) return;
+
+  if (lenis) {
+    lenis.scrollTo(target);
+  } else if (typeof target === "number") {
+    window.scrollTo({ top: target });
+  } else {
+    target.scrollIntoView();
+  }
+}
+
+export default function SmoothScroll() {
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2,
+    lenis = new Lenis({
+      // Light smoothing: follows the wheel closely instead of gliding a whole section.
+      // Raise toward 0.2 for snappier, lower toward 0.05 for floatier.
+      lerp: 0.15,
+      autoRaf: true,
     });
 
-    lenisRef.current = lenis;
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
     return () => {
-      lenis.destroy();
+      lenis?.destroy();
+      lenis = null;
     };
   }, []);
 

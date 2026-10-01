@@ -1,10 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import FadeUp from "./FadeUp";
 
 /* ─── constants ─── */
 const FRAME_COUNT = 240;
+const PRELOAD_STRIDE = 8; // load every 8th frame first
+const frameSrc = (i: number) =>
+  `/assets/animasi-tennis/ezgif-frame-${String(i + 1).padStart(3, "0")}.webp`;
 const SCROLL_DISTANCE_VH = 200; // scroll runway for the animation
 const WRAPPER_HEIGHT_VH = 100 + SCROLL_DISTANCE_VH; // viewport + runway
 const CANVAS_END = 0.80;
@@ -26,134 +30,53 @@ function lerp(a: number, b: number, t: number) {
 
 /* ─── shared court content ─── */
 
-function TennisContent({ animated = true }: { animated?: boolean }) {
+function TennisContent() {
   return (
     <div className="tennis-grid grid md:grid-cols-2 gap-10 lg:gap-20 max-w-7xl w-full items-center">
       <div className="flex flex-col justify-center gap-6 text-left">
-        {animated ? (
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-4xl"
+        <h2 className="h1 max-w-4xl">STAYING SANE ON THE COURT.</h2>
+        <p className="hero-lead max-w-3xl">
+          When the code gets too loud, I find clarity at the baseline. Much
+          like engineering, tennis is a game of footwork, focus, and strategic
+          angles. It&apos;s my favorite way to trade screen time for court time and
+          reset the system before the next deployment.
+        </p>
+        <div className="pt-2">
+          <a
+            href="https://www.instagram.com/rakhabas"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary inline-flex items-center gap-2 w-fit"
           >
-            STAYING SANE ON THE COURT.
-          </motion.h1>
-        ) : (
-          <h1 className="max-w-4xl">STAYING SANE ON THE COURT.</h1>
-        )}
-        {animated ? (
-          <motion.p
-            className="hero-lead max-w-3xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.1,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-          >
-            When the code gets too loud, I find clarity at the baseline. Much
-            like engineering, tennis is a game of footwork, focus, and strategic
-            angles. It&apos;s my favorite way to trade screen time for court time and
-            reset the system before the next deployment.
-          </motion.p>
-        ) : (
-          <p className="hero-lead max-w-3xl">
-            When the code gets too loud, I find clarity at the baseline. Much
-            like engineering, tennis is a game of footwork, focus, and strategic
-            angles. It&apos;s my favorite way to trade screen time for court time and
-            reset the system before the next deployment.
-          </p>
-        )}
-        {animated ? (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: 0.2,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="pt-2"
-          >
-            <a
-              href="https://www.instagram.com/rakhabas"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary inline-flex items-center gap-2 w-fit"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-              </svg>
-              Let&apos;s hit the court 🎾
-            </a>
-          </motion.div>
-        ) : (
-          <div className="pt-2">
-            <a
-              href="https://www.instagram.com/rakhabas"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary inline-flex items-center gap-2 w-fit"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-              </svg>
-              Let&apos;s hit the court 🎾
-            </a>
-          </div>
-        )}
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+            </svg>
+            Let&apos;s hit the court 🎾
+          </a>
+        </div>
       </div>
 
-      {animated ? (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94, rotate: -3 }}
-          animate={{ opacity: 1, scale: 1, rotate: 2 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="tennis-image relative aspect-[2/3] w-full max-w-[320px] md:max-w-md mx-auto md:ml-auto border-4 border-paper shadow-[8px_8px_0_#d7ff3f] bg-ink"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/tennis/tennis-art.jpg"
-            alt="Tennis Art"
-            className="w-full h-full object-cover"
-          />
-        </motion.div>
-      ) : (
-        <div className="tennis-image relative aspect-[2/3] w-full max-w-[320px] md:max-w-md mx-auto md:ml-auto border-4 border-paper shadow-[8px_8px_0_#d7ff3f] bg-ink">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/tennis/tennis-art.jpg"
-            alt="Tennis Art"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      )}
+      <div className="tennis-image relative aspect-[2/3] w-full max-w-[320px] md:max-w-md mx-auto md:ml-auto border-4 border-paper shadow-[8px_8px_0_#d7ff3f] bg-ink">
+        <Image
+          src="/assets/tennis/tennis-art.jpg"
+          alt="Tennis Art"
+          fill
+          sizes="(min-width: 768px) 28rem, 320px"
+          className="object-cover"
+        />
+      </div>
     </div>
   );
 }
@@ -179,7 +102,6 @@ function DesktopScrollSequence() {
   const smoothProgressRef = useRef(0);
 
   const [images, setImages] = useState<HTMLImageElement[]>([]);
-  const [firstLoaded, setFirstLoaded] = useState(false);
 
   /* ── draw a single canvas frame ── */
   const drawFrame = useCallback(
@@ -323,46 +245,41 @@ function DesktopScrollSequence() {
     }
   }, []);
 
-  /* ── load image sequence ── */
+  /* ── load image sequence once the section is near the viewport ── */
   useEffect(() => {
-    if (
-      images.length > 0 ||
-      !window.matchMedia("(min-width: 768px)").matches
-    ) {
-      return;
-    }
+    const wrapper = wrapperRef.current;
+    if (!wrapper || images.length > 0) return;
 
-    const loadedImages = Array.from(
-      { length: FRAME_COUNT },
-      () => new Image()
-    );
-    let cancelled = false;
-    let gotFirst = false;
+    // Hidden on mobile (display: none) → never intersects → never loads.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
 
-    for (let i = 1; i <= FRAME_COUNT; i += 1) {
-      const img = loadedImages[i - 1];
-      const paddedIndex = String(i).padStart(3, "0");
+        const loadedImages = Array.from({ length: FRAME_COUNT }, () => document.createElement("img"));
 
-      img.src = `/assets/animasi-tennis/ezgif-frame-${paddedIndex}.png`;
-      img.onload = () => {
-        if (cancelled) return;
+        // Every Nth frame first so scrubbing works early, then fill the gaps.
+        const order = [
+          ...Array.from({ length: FRAME_COUNT }, (_, i) => i).filter((i) => i % PRELOAD_STRIDE === 0),
+          ...Array.from({ length: FRAME_COUNT }, (_, i) => i).filter((i) => i % PRELOAD_STRIDE !== 0),
+        ];
 
-        if (!gotFirst) {
-          gotFirst = true;
-          setFirstLoaded(true);
-          drawFrame(loadedImages, 0);
+        for (const i of order) {
+          const img = loadedImages[i];
+          // Redraw as frames arrive so the canvas upgrades from the nearest loaded frame.
+          // No-op after unmount: drawFrame bails when canvasRef is null.
+          img.onload = () => drawFrame(loadedImages, currentFrameRef.current);
+          img.src = frameSrc(i);
         }
-      };
-    }
 
-    const frameId = window.requestAnimationFrame(() => {
-      setImages(loadedImages);
-    });
+        setImages(loadedImages);
+      },
+      { rootMargin: "200% 0px" }
+    );
 
-    return () => {
-      cancelled = true;
-      window.cancelAnimationFrame(frameId);
-    };
+    observer.observe(wrapper);
+
+    return () => observer.disconnect();
   }, [drawFrame, images.length]);
 
   /* ── scroll-driven progress + pin state ── */
@@ -463,18 +380,19 @@ function DesktopScrollSequence() {
           className="absolute inset-0"
           style={{ opacity: 1, visibility: "visible", willChange: "opacity" }}
         >
-          {/* Static first frame — visible instantly before JS loads images */}
-          {!firstLoaded && (
-            <img
-              src="/assets/animasi-tennis/ezgif-frame-001.png"
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-            />
-          )}
+          {/* Static first frame under the canvas — visible until the canvas draws over it.
+              Raw <img> on purpose: next/image would re-encode the lossless frame. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={frameSrc(0)}
+            loading="lazy"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+          />
           <canvas
             ref={canvasRef}
-            className="block h-full w-full object-cover"
+            className="absolute inset-0 block h-full w-full"
           />
           <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_40%,#0d0d0d_100%)]" />
         </div>
@@ -493,7 +411,7 @@ function DesktopScrollSequence() {
           }}
         >
           <div className="section-pad h-full">
-            <TennisContent animated={false} />
+            <TennisContent />
           </div>
         </div>
       </div>
@@ -509,46 +427,17 @@ function MobileTennisFallback() {
       className="tennis-mobile-fallback tennis-section section-pad bg-ink block md:hidden"
       id="sequence-mobile"
     >
-      <TennisContent />
+      <FadeUp>
+        <TennisContent />
+      </FadeUp>
     </section>
   );
 }
 
-/* ─── viewport hook ─── */
-
-function useIsDesktopViewport() {
-  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
-    const updateViewport = () => {
-      setIsDesktop(mediaQuery.matches);
-    };
-
-    updateViewport();
-    mediaQuery.addEventListener("change", updateViewport);
-
-    return () => {
-      mediaQuery.removeEventListener("change", updateViewport);
-    };
-  }, []);
-
-  return isDesktop;
-}
-
 /* ─── export ─── */
 
+// Both render; CSS shows one per breakpoint.
 export default function ScrollSequence() {
-  const isDesktop = useIsDesktopViewport();
-
-  if (isDesktop === true) {
-    return <DesktopScrollSequence />;
-  }
-
-  if (isDesktop === false) {
-    return <MobileTennisFallback />;
-  }
-
   return (
     <>
       <DesktopScrollSequence />
