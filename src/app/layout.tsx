@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ScrollProgress from "@/components/ScrollProgress";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://portfolio.rakhbim-project.my.id"),
   title: "Rakha Bima | AI Software Engineer",
   description:
     "Portfolio of Rakha Bima Arya Sambarana, a full-stack developer building web apps, internal tools, data dashboards, and AI automation workflows.",
@@ -28,7 +28,6 @@ export default function RootLayout({
       <body>
         <SmoothScroll />
         {children}
-        <ScrollProgress />
       </body>
     </html>
   );
